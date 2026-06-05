@@ -13,7 +13,6 @@ warn()  { echo -e "${YELLOW}[!]${NC} $1"; }
 error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 info()  { echo -e "${CYAN}[i]${NC} $1"; }
 
-# ─── Root Check ────────────────────────────────────────────────
 [[ $EUID -ne 0 ]] && error "Run as root: sudo bash $0"
 
 # ─── Banner ────────────────────────────────────────────────────
@@ -43,7 +42,7 @@ apt-get install -y -qq wget curl unzip
 # ─── Get Latest CHR Version ────────────────────────────────────
 log "Fetching latest CHR version..."
 
-# روش ۱: MikroTik upgrade API (سریع‌ترین)
+# روش ۱: MikroTik upgrade API
 LATEST_VERSION=$(curl -sf --max-time 10 \
     "https://upgrade.mikrotik.com/routeros/NEWESTa7.stable" 2>/dev/null | \
     awk '{print $1}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' || echo "")
@@ -55,7 +54,7 @@ if [[ -z "$LATEST_VERSION" ]]; then
         grep -oP '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "")
 fi
 
-# روش ۳: fallback به آخرین نسخه شناخته‌شده
+# روش ۳: fallback
 if [[ -z "$LATEST_VERSION" ]]; then
     warn "Auto-detect failed. Using latest known stable version."
     LATEST_VERSION="7.23.1"
@@ -63,7 +62,7 @@ fi
 
 info "CHR version: ${LATEST_VERSION}"
 
-# ─── Verify Download URL Exists ────────────────────────────────
+# ─── Verify Download URL ───────────────────────────────────────
 CHR_URL="https://download.mikrotik.com/routeros/${LATEST_VERSION}/chr-${LATEST_VERSION}.img.zip"
 CHR_ZIP="/tmp/chr-${LATEST_VERSION}.img.zip"
 
@@ -83,7 +82,6 @@ ROOT_PART=$(df / | tail -1 | awk '{print $1}')
 BOOT_DISK=$(lsblk -no PKNAME "$ROOT_PART" 2>/dev/null | head -1)
 BOOT_DISK="/dev/${BOOT_DISK}"
 
-# fallback
 if [[ ! -b "$BOOT_DISK" ]]; then
     BOOT_DISK=$(lsblk -d -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}' | head -1)
 fi
@@ -125,7 +123,6 @@ echo -e "${RED}━━━ Writing CHR to ${BOOT_DISK} — DO NOT INTERRUPT ━━
 echo ""
 dd if="$CHR_IMG" of="$BOOT_DISK" bs=4M status=progress conv=fsync
 sync
-
 log "Write complete!"
 
 # ─── Cleanup ───────────────────────────────────────────────────
@@ -134,7 +131,7 @@ rm -f "$CHR_ZIP" "$CHR_IMG"
 # ─── Done ──────────────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║       ✅  MikroTik CHR ${LATEST_VERSION} Installed Successfully!     ║${NC}"
+echo -e "${GREEN}║    ✅  MikroTik CHR ${LATEST_VERSION} Installed Successfully!        ║${NC}"
 echo -e "${GREEN}╠══════════════════════════════════════════════════════════╣${NC}"
 echo -e "${GREEN}║  Default user : admin                                    ║${NC}"
 echo -e "${GREEN}║  Default pass : (empty — set it immediately!)            ║${NC}"

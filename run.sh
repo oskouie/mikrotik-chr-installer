@@ -2,9 +2,9 @@
 # =============================================================
 #  MikroTik CHR - One-Line Installer Entry Point
 #  Usage:
-#    bash <(curl -fsSL https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh)
+#    curl -fsSL https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh | sudo bash
 #  OR:
-#    bash <(wget -qO- https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh)
+#    wget -qO- https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh | sudo bash
 # =============================================================
 
 set -e
@@ -15,12 +15,10 @@ error() { echo -e "${RED}[✗]${NC} $1"; exit 1; }
 info()  { echo -e "${CYAN}[i]${NC} $1"; }
 
 # ─── Root Check ────────────────────────────────────────────────
-if [[ $EUID -ne 0 ]]; then
-    error "Run as root: sudo bash <(curl -fsSL ...)"
-fi
+[[ $EUID -ne 0 ]] && error "Run as root: curl ... | sudo bash"
 
-# ─── GitHub Repo Config ────────────────────────────────────────
-GITHUB_USER="oskouie"          # <-- عوضش کن
+# ─── GitHub Config ─────────────────────────────────────────────
+GITHUB_USER="oskouie"
 REPO_NAME="mikrotik-chr-installer"
 BRANCH="main"
 RAW_BASE="https://raw.githubusercontent.com/${GITHUB_USER}/${REPO_NAME}/${BRANCH}"
@@ -33,6 +31,7 @@ fi
 
 # ─── Download & Run Main Script ────────────────────────────────
 TMPFILE=$(mktemp /tmp/install-chr-XXXXXX.sh)
+trap "rm -f $TMPFILE" EXIT
 
 log "Downloading installer..."
 if command -v curl &>/dev/null; then
@@ -45,5 +44,3 @@ chmod +x "$TMPFILE"
 info "Launching MikroTik CHR installer..."
 echo ""
 bash "$TMPFILE"
-
-rm -f "$TMPFILE"

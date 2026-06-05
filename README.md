@@ -6,24 +6,24 @@
 
 ## ⚡ One-Line Install
 
+با `curl`:
 ```bash
-sudo bash <(curl -fsSL https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh)
+curl -fsSL https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh | sudo bash
 ```
 
-یا با `wget`:
-
+با `wget`:
 ```bash
-sudo bash <(wget -qO- https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh)
+wget -qO- https://raw.githubusercontent.com/oskouie/mikrotik-chr-installer/main/run.sh | sudo bash
 ```
 
 ---
 
 ## چه کاری انجام میده؟
 
-- ✅ آخرین نسخه stable CHR رو از سایت رسمی MikroTik دانلود میکنه  
-- ✅ دیسک بوت رو خودکار پیدا میکنه  
-- ✅ Ubuntu رو کاملاً پاک و CHR رو جایگزین میکنه  
-- ✅ سیستم ریبوت میشه و مستقیم وارد MikroTik میشه  
+- ✅ آخرین نسخه stable CHR رو از سایت رسمی MikroTik دانلود میکنه
+- ✅ دیسک بوت رو خودکار پیدا میکنه
+- ✅ Ubuntu رو کاملاً پاک و CHR رو جایگزین میکنه
+- ✅ سیستم ریبوت میشه و مستقیم وارد MikroTik میشه
 
 ---
 
@@ -41,8 +41,8 @@ sudo bash <(wget -qO- https://raw.githubusercontent.com/oskouie/mikrotik-chr-ins
 
 > **این عملیات برگشت‌پذیر نیست.** تمام دیتای موجود روی سرور پاک میشه.
 
-- قبل از اجرا دسترسی **KVM / IPMI / Out-of-Band** داشته باش  
-- روی **VPS** کار میکنه اگه پروایدر CHR رو ساپورت کنه  
+- قبل از اجرا دسترسی **KVM / IPMI / Out-of-Band** داشته باش
+- روی **VPS** کار میکنه اگه پروایدر CHR رو ساپورت کنه
 
 ---
 
